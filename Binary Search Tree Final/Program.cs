@@ -20,7 +20,12 @@ namespace Binary_Search_Tree_Final
             Tree1.InserIntoTree(20);
             Tree1.InserIntoTree(6);
             Tree1.InserIntoTree(40);
-            Tree1.InserIntoTree(2);
+            Tree1.InserIntoTree(41);
+            Tree1.InserIntoTree(42);
+            Tree1.InserIntoTree(3);
+            Tree1.InserIntoTree(60);
+            Tree1.InserIntoTree(50);
+            Tree1.InserIntoTree(100);
 
             Console.WriteLine("--------------Preorder-----------------");
             Tree1.PreOrder();
@@ -33,6 +38,23 @@ namespace Binary_Search_Tree_Final
 
             Console.WriteLine("--------------CountLeaves-----------------");
             Console.WriteLine(Tree1.CountLeaves());
+
+            Console.WriteLine("--------------CountHeight-----------------");
+            Console.WriteLine(Tree1.CountHeight());
+
+
+
+            Console.WriteLine("------------Before--Delete-----------------");
+            Tree1.Inorder();
+            Console.WriteLine("--------------Delete-----------------");
+            Tree1.RemoveNode(2);
+            Tree1.Inorder();
+
+
+
+           
+
+
             Console.ReadLine();
         }
     }
