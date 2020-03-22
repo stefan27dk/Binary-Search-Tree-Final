@@ -273,9 +273,9 @@ namespace Binary_Search_Tree_Final
 
 
 
-             if(CurrentNode.LeftNode != null && CurrentNode.RightNode != null && CurrentNode.Data == DataForRemove)//---If Node for delete is with 2 childs
+             if(CurrentNode.Data == DataForRemove && (CurrentNode.LeftNode != null && CurrentNode.RightNode != null) && Parrent!=null)//---If Node for delete is with 2 childs
              {
-                DeleteNodeWithTwoChilds(CurrentNode, Parrent);//Delete Node with 2 childs Metheod
+                DeleteNodeWithTwoChilds(CurrentNode);//Delete Node with 2 childs Metheod
              }
 
 
@@ -294,9 +294,9 @@ namespace Binary_Search_Tree_Final
             }
 
 
-            else if(Parrent == null && CurrentNode.Data == DataForRemove)//---If Node for delete is Root
+            else if(Parrent == null && CurrentNode.Data == DataForRemove)//---If Node for delete is ROOT
             {
-                DeletingRoot(CurrentNode, Parrent);//Delete Root Method
+                DeletingRoot();//Delete Root Method
             }
 
 
@@ -380,16 +380,34 @@ namespace Binary_Search_Tree_Final
 
 
         //-------DELETING-Node-With 2 Childs---::START::-------------------------------
-        private void DeleteNodeWithTwoChilds(BinaryNode NodeForDelete, BinaryNode Parrent)
+        private void DeleteNodeWithTwoChilds(BinaryNode NodeForDelete)
         {
-            BinaryNode Helper = CurrentNode.LeftNode;
+            BinaryNode Helper = NodeForDelete.LeftNode;
+            BinaryNode Parrent = NodeForDelete;//--Save the Parrent the Previeous Node in the Loop so you canuse it to link the childrens of the Node we will take if there are some.
+
 
             while (Helper.RightNode != null)
             {
-                Helper = Helper.RightNode;
+                Parrent = Helper;//--Assign Parrent to the Previeous Node
+                Helper = Helper.RightNode;//---Next---> find the Biggest Node "When Right is Null than this is the biggest "The last to right"
             }
 
-            CurrentNode = Helper.RightNode;xsads
+            NodeForDelete.Data = Helper.Data;//---The deleted Node is equals now to the maximum Value from it Left Right Subtree
+
+            if(Helper.LeftNode != null && Helper.LeftNode.Data > Parrent.Data)//---If the Node we will take has children to the left Side "It is not possible for it to have children to the right side" We have checked that in the "while Loop"
+            {
+                Parrent.RightNode = Helper.LeftNode;//If we come here it means that the token Node has child to the left side Take the Parrent of the token Node and Make its right child the Left Child of the Token Node
+            }
+            else if(Helper.LeftNode != null && Helper.LeftNode.Data < Parrent.Data)
+            {
+                Parrent.LeftNode = Helper.LeftNode;
+            }
+            else 
+            {
+                Parrent.LeftNode = null;
+            }
+
+            
         }
         //-------DELETING-Node-With 1 Childs---::END::-------------------------------
 
@@ -397,29 +415,50 @@ namespace Binary_Search_Tree_Final
 
 
        //-------DELETING-Root---::START::-------------------------------
-        private void DeletingRoot(BinaryNode NodeForDelete, BinaryNode Parrent)
+        private void DeletingRoot()
         {
-            if(Root.LeftNode == null)//---If Root Lef Sub Tree is Null
+
+
+            if(Root.LeftNode == null && Root.RightNode != null)//---If Root Lef Sub Tree is Null
             {
                 Root = Root.RightNode;
             }
-            else if(Root.RightNode == null)//---If Root Right Sub Tree is Null
+            else if(Root.LeftNode != null && Root.RightNode == null)//---If Root Right Sub Tree is Null
             {
                 Root = Root.LeftNode;
             }
+            else if (Root.RightNode == null && Root.LeftNode == null)//---If the tree contains only Root 
+            {
+                Root = null;
+            }
+
 
             else if(Root.LeftNode != null && Root.RightNode != null)//---If Both Right and Left Subtrees are Not Null
             {
-                BinaryNode Helper = Root.RightNode;//--Helper
 
-                while (Helper.LeftNode != null)
+                if(Root.RightNode.LeftNode == null)
                 {
-                    Helper = Helper.LeftNode;//--Finding the smallest Value in the Right Sub Tree so we can insert the Left Sub Tree after it 
+                   Root.RightNode.LeftNode = Root.LeftNode;
+                    Root = Root.RightNode;
                 }
 
-                               
-                Helper.LeftNode = Root.LeftNode;
-                Root = Root.RightNode;
+
+                else
+                {
+                BinaryNode RightSubTree = Root.RightNode;//--RightSubTree
+                //Root.LeftNode -----> //--Left SubTree  (Left SubTree will be inserted in the Right subtree after the smallest Value in the Right SubTree) - - - So Right SubTree Left--> Left till we find the last value. Root.RightNode.LeftNode ---> countinue with Lef.Left.Left till we find null and than we insert the Left Subtree there.
+
+
+                while (RightSubTree.LeftNode != null)//Loop till it finds the smallest Value in the Right SubTree
+                {
+                    RightSubTree = RightSubTree.LeftNode;//--Finding the smallest Value in the Right Sub Tree so we can insert the Left Sub Tree after it 
+                }
+
+
+                RightSubTree.LeftNode = Root.LeftNode; //---Left Subtree Insertion after the smallest Value "Data" in the RIght Subtree
+                Root = Root.RightNode;//The new Root
+
+                }
             }
         }
 
